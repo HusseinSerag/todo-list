@@ -1,10 +1,15 @@
 
 const getter = {
-    getTitle: () => this.title,
-    getDescription: () => this.description,
-    getDueDate: () => this.dueDate,
-    getPriority: () => this.priority,
-    getCompleted:() => this.completed
+    getTitle: function() { 
+       return this.title
+    },
+    getDescription: function()
+    {
+       return this.description
+    },
+    getDueDate: function() { return this.dueDate},
+    getPriority: function() {return this.priority},
+    getCompleted:function() {return this.completed}
 }
 
 
