@@ -1,0 +1,25 @@
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+@font-face {
+    font-family: shizuru;
+    src: url('../fonts/Shizuru-Regular.ttf');
+}
+body{
+    background: rgb(254,174,255);
+background: linear-gradient(90deg, rgba(254,174,255,1) 25%, rgba(173,71,198,1) 98%);
+padding:min(2rem , 1.2rem + 1vw)
+}
+h1.main-title{
+    font-family: shizuru;
+    text-transform:uppercase;
+    color:rgb(10,20,10);
+    font-size: clamp(24px,1.4rem + 1vw,36px);
+}
+#content.content{
+    width:100%;
+    border-radius: 15px;
+    min-height: 300px;
+}
