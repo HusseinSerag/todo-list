@@ -11,8 +11,8 @@ const sidebar = document.querySelector('.sidebar')
 const main = document.querySelector('.main')
 const newProjectbtn = document.querySelector('button.add')
 let projects = []
-createAProject('Hussein')
-createAProject('Hassan')
+createAProject('University')
+
 
 newProjectbtn.addEventListener('click',()=>{
    let inputDiv = DOM.createNewProjectInSidebar();
