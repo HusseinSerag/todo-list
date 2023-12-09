@@ -6,6 +6,7 @@ import deleteIcon from '../photos/delete-circle.png'
 import CloseIcon from '../photos/close-box.png'
 import pencilIcon from '../photos/pencil.png'
 import infoIcon from '../photos/information-box-outline.png'
+import { format , formatDistance } from 'date-fns'
 const contentContainer = document.querySelector('#content.content');
 const sidebar = document.querySelector('.sidebar')
 const main = document.querySelector('.main')
@@ -19,7 +20,7 @@ function loadDefault(){
     const todoContainer = cont.querySelector('.todoContainer')
     const addToDo = todoContainer.querySelector('.add-a-todo')
     
-    toDoItemFunctionality(projects[0],todoContainer,addToDo,toDo.createATodo('Hassan','Call my brother hasoona','','high'))
+    toDoItemFunctionality(projects[0],todoContainer,addToDo,toDo.createATodo('Hassan','Call my brother hasoona',new Date('2023-12-23'),'high'))
     console.log(todoContainer)
     
        
@@ -111,7 +112,7 @@ function projectContainerFunctionality(projectContainer,project){
 
     let addToDo = document.createElement('button')
     addToDo.classList.add('add-a-todo')
-    addToDo.textContent = "Let's do that!"
+    addToDo.textContent = "Add"
     todoContainer.appendChild(addToDo)
 
     addToDo.addEventListener('click',()=>{
@@ -133,10 +134,11 @@ function projectContainerFunctionality(projectContainer,project){
 }
 
 function toDoItemFunctionality(project,toDoContainer,addAToDo,todo){
-    console.log(toDoContainer)
+   
     project.addAToDo(todo)
     
     let toDoItem = DOM.createToDoItem()
+    toDoItem.classList.add(`${todo.getPriority()}-p`)
     let name = toDoItem.querySelector('.item-name-todo')
 
     let deleteDiv = toDoItem.querySelector('.delete')
@@ -146,12 +148,15 @@ function toDoItemFunctionality(project,toDoContainer,addAToDo,todo){
     let info = toDoItem.querySelector('.more-info')
     info.src = infoIcon
     
-    name.textContent = todo.getTitle()
+    let dueDate = toDoItem.querySelector('.dueDate')
     
+    dueDate.textContent = `finish in ${formatDistance(todo.getDueDate(), new Date())}`
+    name.textContent = todo.getTitle()
+
     
     toDoContainer.insertBefore(toDoItem,addAToDo)
 
-    //TODO edit to open and edit the item
+   
     edit.addEventListener('click',()=>{
         let mainDiv = DOM.addToDoPopUp()
         mainDiv.classList.add('add-to-do-popup')
@@ -167,7 +172,7 @@ function toDoItemFunctionality(project,toDoContainer,addAToDo,todo){
         })
     })
 
-    //TODO to only display info in an easy fashion we have the todo items so it is really straightforward
+   
     info.addEventListener('click',()=>{
         let mainDiv = DOM.infoPopUp()
         mainDiv.classList.add('info-popup')
@@ -203,6 +208,9 @@ function handleMainDiv(mainDiv,cover,project,addAToDo,toDoContainer){
     let title = mainDiv.querySelector('h1')
     let inputTitle = mainDiv.querySelector('#title')
     let description = mainDiv.querySelector('#description')
+   
+   
+   
     title.classList.add('title')
     let closeImg = mainDiv.querySelector('img')
     closeImg.src = CloseIcon
@@ -216,9 +224,16 @@ function handleMainDiv(mainDiv,cover,project,addAToDo,toDoContainer){
     button.classList.add('confirm')
     button.classList.add('add-to-do')
 
+    let chosenDate = mainDiv.querySelector('input[type=date]')
+    chosenDate.setAttribute('min',format(new Date(),'yyyy-MM-dd'))
+
     button.addEventListener('click',()=>{
-        
-        let todo = toDo.createATodo(inputTitle.value , description.value,'1/10/2023' , 'high')
+        let chosenPriority = mainDiv.querySelector('.priorityDiv label input[type="radio"]:checked')
+
+
+        //TODO add date
+        console.log(chosenDate.value)
+        let todo = toDo.createATodo(inputTitle.value , description.value, new Date(chosenDate.value) , chosenPriority.value)
         
         document.body.removeChild(cover)
         document.body.removeChild(mainDiv)
@@ -238,6 +253,24 @@ function handleEditDiv(todo,mainDiv,cover,toDoItem){
     let descriptionInput = mainDiv.querySelector('textarea')
     descriptionInput.value = todo.getDescription()
 
+    let chosenPriority = todo.getPriority()
+    
+    let choosePriority = mainDiv.querySelectorAll('input[type="radio"]')
+    
+    let chosen = Array.from(choosePriority).find(child =>
+        {
+            console.log(child.value , chosenPriority)
+            if(child.value == chosenPriority)
+            return child
+        
+        })
+    
+        chosen.checked = true
+    
+    
+
+
+
     let closeImg = mainDiv.querySelector('img')
     closeImg.src = CloseIcon
     closeImg.addEventListener('click',()=>{
@@ -246,8 +279,12 @@ function handleEditDiv(todo,mainDiv,cover,toDoItem){
         document.body.removeChild(mainDiv)
     })
 
-
+    let chosenDate = mainDiv.querySelector('input[type=date]')
+    chosenDate.setAttribute('min',format(new Date(),'yyyy-MM-dd'))
+    
+    
     let editedName = toDoItem.querySelector('.item-name-todo')
+    let dueDateDiv = toDoItem.querySelector('.dueDate')
 
     let editButton = mainDiv.querySelector('button')
     editButton.textContent = 'Edit'
@@ -255,10 +292,16 @@ function handleEditDiv(todo,mainDiv,cover,toDoItem){
     editButton.addEventListener('click',()=>{
         todo.setTitle(titleInput.value)
         todo.setDescription(descriptionInput.value)
+        todo.setPriority(mainDiv.querySelector('input[type="radio"]:checked').value)
+        todo.setDueDate(new Date(chosenDate.value))
         document.body.removeChild(cover)
         document.body.removeChild(mainDiv)
 
         editedName.textContent = titleInput.value
+        toDoItem.className = `todo-item ${todo.getPriority()}-p`
+        dueDateDiv.textContent = `finish in ${formatDistance(todo.getDueDate(), new Date())}`
+
+
     })
 
 }

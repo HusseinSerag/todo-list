@@ -18,22 +18,28 @@ h1.main-title{
     text-transform:uppercase;
     color:white;
     font-size: clamp(24px,1.4rem + 1vw,36px);
-    padding:min(1rem , 0.6rem + 1vw)
+    padding:min(1rem , 0.6rem + 1vw);
+    text-align: center;
 }
 #content.content{
     margin: 0 auto;
     
-    width:100%;
+    width:min(800px,90%);
     
     min-height: 250px;
-    min-width: 250px;
+    
     
     background-color: white;
     display: grid;
-    grid-template-columns:1fr 5fr ;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr) minmax(250px,4fr)) ;
     
     
 }
+.add-a-todo{
+    margin-top: 15px;;
+    padding:10px 20px;
+}
+
 .main{
     margin: 0 auto;
 }
@@ -125,7 +131,10 @@ button{
     width: 100%;
     padding:1rem
 }
-
+input[type=date]{
+    width: min(250px,100%);
+    font-size: 1rem;
+}
 .add-to-do-popup,.info-popup{
     position: absolute;
     top: 50%;
@@ -133,12 +142,12 @@ button{
     transform: translate(-50%, -50%);
     background-color: white;
     z-index: 1;
-    width:40%;
+    width:min(600px,80%);
     height: 50%;
     padding:15px;
     display: flex;
     flex-direction: column;
-    gap:10px;
+    gap:15px;
     position: relative;
 }
 
@@ -179,6 +188,9 @@ textarea{
 }
 .todo-item{
     display: flex;
+    align-items: center;
+    padding:5px;
+    gap:5px;
 
 }
 .todo-item > *:hover{
@@ -211,12 +223,70 @@ background-color: white;
     font-size: 1.2rem;
     font-family: aoboshi;
 }
-.high{
-    border-left:1px red solid
+.high-p{
+    border-left:2px red solid
 }
-.medium{
-    border-left: #8B8000 1px solid;
+.medium-p{
+    border-left: #8B8000 2px solid;
 }
-.low{
-    border-left: darkgreen 1px solid;
+.low-p{
+    border-left: darkgreen 2px solid;
 }
+
+
+input[type="radio"]{
+ 
+    appearance:none;
+   }
+   
+   .label{
+     padding:12px;
+     position:relative;
+     font-size: 0.9rem;
+     
+   }
+   .priorityDiv{
+    display: flex;
+    
+   }
+   .high{
+     color:red;
+   }
+   .medium{
+     color:#8B8000;
+   }
+   .low{
+     color:green;
+   }
+   input[type="radio"]:checked + .high{
+     color:white;
+     background-color:red;
+   }
+   input[type="radio"]:checked + .medium{
+     color:white;
+     background-color:#8B8000;
+   }
+   input[type="radio"]:checked + .low{
+     color:white;
+     background-color:green;
+   }
+
+   .todo-item + .todo-item{
+    margin-top: 10px;
+   }
+
+   .todo-item .dueDate{
+    font-size: min(1rem,8px + 1vw);
+   }
+
+
+   @media only screen and (max-width:425px){
+    
+    #content.content{
+        
+        grid-template-rows:1fr 1fr ;
+        grid-template-columns: unset;
+        
+        
+    }
+   }

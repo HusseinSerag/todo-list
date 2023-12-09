@@ -55,10 +55,15 @@ edit.classList.add('edit')
 let deleteDiv = document.createElement('img')
 deleteDiv.classList.add('delete')
 
+let dueDate = document.createElement('span')
+dueDate.classList.add('dueDate')
+
+
 
 
 
 div.appendChild(nameSpan)
+div.appendChild(dueDate)
 div.appendChild(info)
 div.appendChild(edit)
 div.appendChild(deleteDiv)
@@ -72,6 +77,9 @@ export function addToDoPopUp(){
    let title = document.createElement('h1')
    let img = document.createElement('img')
    let add = document.createElement('button')
+   let priorityDiv = document.createElement('div')
+   priorityDiv.classList.add('priorityDiv')
+
    add.textContent = 'Add'
   
    title.textContent = 'Let\'s do this!'
@@ -80,7 +88,15 @@ export function addToDoPopUp(){
    img.classList.add('close-box')
    mainDiv.appendChild(createLabelWithInput('Title' , 'title','text'))
    mainDiv.appendChild(createLabelWithInput('Description' , 'description','textarea'))
+   
+   priorityDiv.appendChild(createPriority('high'))
+   priorityDiv.appendChild(createPriority('medium'))
+   priorityDiv.appendChild(createPriority('low'))
+   mainDiv.appendChild(priorityDiv)
+   mainDiv.appendChild(createLabelWithInput('dueDate' , 'dueDate' , 'date'))
    mainDiv.appendChild(add)
+
+   
    
    return mainDiv
 }
@@ -123,10 +139,16 @@ function createLabelWithInput(labelContent,id,type){
         input.setAttribute('contenteditable','true')
         input.setAttribute('maxlength',300)
     }
+    else if(type == 'date')
+    {
+        input = document.createElement('input')
+        input.setAttribute('type', type)
+    }
     else
     {
           input = document.createElement('input')
      input.setAttribute('maxlength',50)
+     input.setAttribute('type', type)
     }
    
     label.textContent = labelContent+": "
@@ -137,3 +159,22 @@ function createLabelWithInput(labelContent,id,type){
     div.appendChild(input)
     return div
 }
+
+ function createPriority(name){
+
+    let label = document.createElement('label');
+    let input = document.createElement('input');
+    input.setAttribute('type' , 'radio');
+    input.setAttribute('name','priority');
+    input.setAttribute('value',name)
+    
+    let span = document.createElement('span')
+    span.textContent = name
+    span.className = `${name} label`
+
+    label.appendChild(input)
+    label.appendChild(span)
+
+    return label
+    
+  }
