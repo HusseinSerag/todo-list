@@ -126,7 +126,7 @@ button{
     padding:1rem
 }
 
-.add-to-do-popup{
+.add-to-do-popup,.info-popup{
     position: absolute;
     top: 50%;
     left: 50%;
@@ -176,4 +176,47 @@ textarea{
 .add-to-do{
     background-color: white;
 
+}
+.todo-item{
+    display: flex;
+
+}
+.todo-item > *:hover{
+    transform:scale(1.1)
+}
+.todo-item :nth-child(2){
+    margin-left: auto;
+}
+
+.finished{
+    text-decoration: line-through 2px;
+}
+.finished-div{
+    opacity: 0.5;
+}
+
+.edit-btn.btn{
+color:#8B8000;
+background-color: white;
+}
+
+.info-popup{
+    display: flex;
+}
+.info-item [class^=key]{
+    font-size: 1.3rem;
+    font-family: aoboshi;
+}
+.info-item [class^=value]{
+    font-size: 1.2rem;
+    font-family: aoboshi;
+}
+.high{
+    border-left:1px red solid
+}
+.medium{
+    border-left: #8B8000 1px solid;
+}
+.low{
+    border-left: darkgreen 1px solid;
 }

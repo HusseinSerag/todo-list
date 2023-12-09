@@ -47,7 +47,7 @@ export function createToDoItem(){
 let div = document.createElement('div')
 div.classList.add('todo-item')
 let nameSpan = document.createElement('span')
-nameSpan.classList.add('item-name')
+nameSpan.classList.add('item-name-todo')
 let info = document.createElement('img')
 info.classList.add('more-info')
 let edit = document.createElement('img')
@@ -83,6 +83,36 @@ export function addToDoPopUp(){
    mainDiv.appendChild(add)
    
    return mainDiv
+}
+
+
+export function infoPopUp(){
+    let mainDiv = document.createElement('div')
+    mainDiv.appendChild(createInfoLabel('Title'))
+    mainDiv.appendChild(createInfoLabel('Description'))
+    let img = document.createElement('img')
+    mainDiv.appendChild(img)
+   img.classList.add('close-box')
+
+    return mainDiv
+    
+}
+
+function createInfoLabel(name){
+    let mainDiv = document.createElement('div')
+    mainDiv.classList.add('info-item')
+    let title = document.createElement('span')
+    title.className = `key-${name}`
+
+    let valueDiv = document.createElement('span')
+    valueDiv.className = `value-${name}`
+    
+
+    mainDiv.appendChild(title)
+    mainDiv.appendChild(valueDiv)
+
+    return mainDiv
+
 }
 function createLabelWithInput(labelContent,id,type){
     let div = document.createElement('div')

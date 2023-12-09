@@ -11,7 +11,20 @@ const sidebar = document.querySelector('.sidebar')
 const main = document.querySelector('.main')
 const newProjectbtn = document.querySelector('button.add')
 let projects = []
-createAProject('University')
+
+
+function loadDefault(){
+   let cont =  createAProject('University');
+   
+    const todoContainer = cont.querySelector('.todoContainer')
+    const addToDo = todoContainer.querySelector('.add-a-todo')
+    
+    toDoItemFunctionality(projects[0],todoContainer,addToDo,toDo.createATodo('Hassan','Call my brother hasoona','','high'))
+    console.log(todoContainer)
+    
+       
+    
+}
 
 
 newProjectbtn.addEventListener('click',()=>{
@@ -51,12 +64,13 @@ function createAProject(name){
     let project = Project.createProject(name);
     projects.push(project)
 
-    let projectContainer = DOM.createProjectContainer()
+    let projectContainer =DOM.createProjectContainer()
 
-    projectContainerFunctionality(projectContainer,project)
+     projectContainerFunctionality(projectContainer,project)
     let sideBarItem = DOM.addToTheSidebar()
-    sideBarFunctionality(sideBarItem,project,projectContainer)
+     sideBarFunctionality(sideBarItem,project,projectContainer)
     
+    return projectContainer
 
 
 }
@@ -98,6 +112,7 @@ function projectContainerFunctionality(projectContainer,project){
     let addToDo = document.createElement('button')
     addToDo.classList.add('add-a-todo')
     addToDo.textContent = "Let's do that!"
+    todoContainer.appendChild(addToDo)
 
     addToDo.addEventListener('click',()=>{
         let mainDiv = DOM.addToDoPopUp()
@@ -113,15 +128,16 @@ function projectContainerFunctionality(projectContainer,project){
             document.body.removeChild(mainDiv)
         })
     })
-    todoContainer.appendChild(addToDo)
     
+    return projectContainer
 }
 
 function toDoItemFunctionality(project,toDoContainer,addAToDo,todo){
+    console.log(toDoContainer)
     project.addAToDo(todo)
-    console.log(todo)
+    
     let toDoItem = DOM.createToDoItem()
-    let name = toDoItem.querySelector('.item-name')
+    let name = toDoItem.querySelector('.item-name-todo')
 
     let deleteDiv = toDoItem.querySelector('.delete')
     deleteDiv.src = deleteIcon
@@ -129,13 +145,57 @@ function toDoItemFunctionality(project,toDoContainer,addAToDo,todo){
     edit.src = pencilIcon
     let info = toDoItem.querySelector('.more-info')
     info.src = infoIcon
-    console.log(todo.getTitle())
+    
     name.textContent = todo.getTitle()
-    console.log(name)
+    
+    
     toDoContainer.insertBefore(toDoItem,addAToDo)
+
+    //TODO edit to open and edit the item
+    edit.addEventListener('click',()=>{
+        let mainDiv = DOM.addToDoPopUp()
+        mainDiv.classList.add('add-to-do-popup')
+        let cover = document.createElement('div')
+        cover.classList.add('cover')
+        document.body.appendChild(mainDiv)
+        document.body.appendChild(cover)
+        handleEditDiv(todo,mainDiv,cover,toDoItem)
+        cover.addEventListener('click',()=>{
+            
+            document.body.removeChild(cover)
+            document.body.removeChild(mainDiv)
+        })
+    })
+
+    //TODO to only display info in an easy fashion we have the todo items so it is really straightforward
+    info.addEventListener('click',()=>{
+        let mainDiv = DOM.infoPopUp()
+        mainDiv.classList.add('info-popup')
+        let cover = document.createElement('div')
+        cover.classList.add('cover')
+        document.body.appendChild(mainDiv)
+        document.body.appendChild(cover)
+        handleInfoDiv(todo,mainDiv,cover)
+        cover.addEventListener('click',()=>{
+            
+            document.body.removeChild(cover)
+            document.body.removeChild(mainDiv)
+        })
+        
+    })
     deleteDiv.addEventListener('click',()=>{
         project.removeAToDo(todo)
         toDoContainer.removeChild(toDoItem)
+    })
+
+    name.addEventListener('click',()=>{
+        name.classList.toggle('finished')
+        toDoItem.classList.toggle('finished-div')
+        if(todo.getCompleted == 0)
+        todo.setCompleted(1)
+        else{
+            todo.setCompleted(0)
+        }
     })
 }
 
@@ -167,35 +227,66 @@ function handleMainDiv(mainDiv,cover,project,addAToDo,toDoContainer){
     })
 }
 
+function handleEditDiv(todo,mainDiv,cover,toDoItem){
+    let title = mainDiv.querySelector('h1')
+    title.textContent = 'Setting new goals!'
+    title.classList.add('title')
+
+    let titleInput = mainDiv.querySelector('input#title')
+    titleInput.value = todo.getTitle()
+
+    let descriptionInput = mainDiv.querySelector('textarea')
+    descriptionInput.value = todo.getDescription()
+
+    let closeImg = mainDiv.querySelector('img')
+    closeImg.src = CloseIcon
+    closeImg.addEventListener('click',()=>{
+
+        document.body.removeChild(cover)
+        document.body.removeChild(mainDiv)
+    })
 
 
-/*
-let dd = document.querySelector('.todo')
-let de = Project.createProject('Hssein')
-let t = toDo.createATodo('Running','RUn 10 km' , 'kman shwta' , 'high' , 0)
-let f = toDo.createATodo('Runnig','RUn 10 km' , 'kman shwta' , 'high' , 0)
-let x = toDo.createATodo('Runng','RUn 10 km' , 'kman shwta' , 'high' , 0)
-let z = toDo.createATodo('Rung','RUn 10 km' , 'kman shwta' , 'high' , 0)
-console.log(de.getName())
-de.addAToDo(t)
-de.addAToDo(x)
-de.addAToDo(f)
-de.addAToDo(z)
-console.log(de.getAllToDo())
+    let editedName = toDoItem.querySelector('.item-name-todo')
 
-function addthetodos(de){
-    de.getAllToDo().forEach(element => {
-        let div = document.createElement('div')
-        div.textContent = element
-        div.addEventListener('click' , e =>{
-            console.log(de.removeAToDo(element))
-            dd.removeChild(div)
-            console.log(de.getAllToDo())
-        })
-        dd.appendChild(div)
-    });
-    
+    let editButton = mainDiv.querySelector('button')
+    editButton.textContent = 'Edit'
+    editButton.className='edit-btn btn'
+    editButton.addEventListener('click',()=>{
+        todo.setTitle(titleInput.value)
+        todo.setDescription(descriptionInput.value)
+        document.body.removeChild(cover)
+        document.body.removeChild(mainDiv)
+
+        editedName.textContent = titleInput.value
+    })
+
 }
-addthetodos(de)
 
-*/
+
+
+function handleInfoDiv(todo,mainDiv,cover){
+    let closeImg = mainDiv.querySelector('img')
+    closeImg.src = CloseIcon
+
+    let container = mainDiv.querySelectorAll('.info-item')
+    container.forEach(child =>{
+        let key = child.querySelector('[class^=key]')
+        let value = child.querySelector('[class^=value]')
+        let keyTitle = key.getAttribute('class').split('-')[1]
+       
+        key.textContent = `${keyTitle}: `
+        
+        value.textContent = todo[`get${keyTitle}`]()
+
+    })
+    closeImg.addEventListener('click',()=>{
+
+        document.body.removeChild(cover)
+        document.body.removeChild(mainDiv)
+    })
+
+}
+
+loadDefault()
+

@@ -11,13 +11,29 @@ const getter = {
     getPriority: function() {return this.priority},
     getCompleted:function() {return this.completed}
 }
-
+const setter = {
+    setTitle: function(newTitle){
+        this.title = newTitle
+    }
+    ,setDescription:function(newDescription){
+        this.description = newDescription
+    },
+    setDueDate:function(newDueDate){
+        this.dueDate = newDueDate
+    },
+    setPriority: function(newPriority){
+        this.priority = newPriority
+    },
+    setCompleted:function(newCompleted){
+        this.completed = newCompleted
+    }
+}
 
 
 export function createATodo(title,description,dueDate,priority,completed=0){
         
     let state =  {title,description,dueDate,priority,completed}
 
-    return Object.assign(state , getter)
+    return Object.assign(state , getter,setter)
 }
 
