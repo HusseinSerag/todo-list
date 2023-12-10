@@ -126,6 +126,7 @@ function sideBarFunctionality(sideBarItem,project,projectContainer){
     img.addEventListener('click',()=>{
        let index = projects.indexOf(project)
        projects.splice(index,1)
+      mutateLocalStorage(project,true)
        sidebar.removeChild(sideBarItem)
        if(main.hasChildNodes())
             if(main.contains(projectContainer))
@@ -371,16 +372,31 @@ function handleInfoDiv(todo,mainDiv,cover){
 
 }
 
-function mutateLocalStorage(project){
-    
-    let projectInLocalStorage = JSON.parse(localStorage.getItem('projects'))
-    let index = projectInLocalStorage.findIndex(child =>
+function mutateLocalStorage(project,number=false){
+    if(!number)
     {
-        return  child.number == project.number
-            
-    })
-    projectInLocalStorage[index] = project
-    localStorage.setItem('projects',JSON.stringify(projectInLocalStorage))
+        let projectInLocalStorage = JSON.parse(localStorage.getItem('projects'))
+        let index = projectInLocalStorage.findIndex(child =>
+        {
+            return  child.number == project.number
+                
+        })
+        
+        projectInLocalStorage[index] = project
+        localStorage.setItem('projects',JSON.stringify(projectInLocalStorage))
+    }
+    else{
+        let projectInLocalStorage = JSON.parse(localStorage.getItem('projects'))
+        let index = projectInLocalStorage.findIndex(child =>
+        {
+            return  child.number == project.number
+                
+        })
+        projectInLocalStorage.splice(index,1)
+        localStorage.setItem('projects',JSON.stringify(projectInLocalStorage))
+ 
+    }
+   
 }
 loadDefault()
 
