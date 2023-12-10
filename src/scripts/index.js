@@ -15,13 +15,34 @@ let projects = []
 
 
 function loadDefault(){
-   let cont =  createAProject('University');
-   
-    const todoContainer = cont.querySelector('.todoContainer')
-    const addToDo = todoContainer.querySelector('.add-a-todo')
     
-    toDoItemFunctionality(projects[0],todoContainer,addToDo,toDo.createATodo('Hassan','Call my brother hasoona',new Date('2023-12-23'),'high'))
-    console.log(todoContainer)
+   
+   
+    if(localStorage.hasOwnProperty('projects'))
+    {
+
+        let projectsStorage = JSON.parse(localStorage.getItem('projects'))
+       console.log(projects)
+        projectsStorage.forEach(project =>{
+                Object.setPrototypeOf(project,Project.prot)
+                projects.push(project)
+                let cont =  createAProject(project.projectName,false,project);
+
+                const todoContainer = cont.querySelector('.todoContainer')
+                const addToDo = todoContainer.querySelector('.add-a-todo')
+    
+                project.toDoList.forEach(todo =>
+                    {
+                        
+                        Object.setPrototypeOf(todo,toDo.prot)
+                        toDoItemFunctionality(project,todoContainer,addToDo,toDo.createATodo(todo.getTitle(),todo.getDescription(),new Date(todo.getDueDate()),todo.getPriority()),false)
+                    })
+              
+        })
+      
+        
+    }
+   
     
        
     
@@ -60,11 +81,17 @@ newProjectbtn.addEventListener('click',()=>{
 
 
 
-function createAProject(name){
+function createAProject(name,load=true,project){
+    if(load)
+    {
+        project = Project.createProject(name);
 
-    let project = Project.createProject(name);
-    projects.push(project)
-
+        projects.push(project)
+      
+        localStorage.setItem('projects',JSON.stringify(projects))
+    }
+   
+    
     let projectContainer =DOM.createProjectContainer()
 
      projectContainerFunctionality(projectContainer,project)
@@ -133,10 +160,10 @@ function projectContainerFunctionality(projectContainer,project){
     return projectContainer
 }
 
-function toDoItemFunctionality(project,toDoContainer,addAToDo,todo){
-   
+function toDoItemFunctionality(project,toDoContainer,addAToDo,todo,number=true){
     project.addAToDo(todo)
-    
+    if(number)
+        mutateLocalStorage(project)
     let toDoItem = DOM.createToDoItem()
     toDoItem.classList.add(`${todo.getPriority()}-p`)
     let name = toDoItem.querySelector('.item-name-todo')
@@ -164,7 +191,7 @@ function toDoItemFunctionality(project,toDoContainer,addAToDo,todo){
         cover.classList.add('cover')
         document.body.appendChild(mainDiv)
         document.body.appendChild(cover)
-        handleEditDiv(todo,mainDiv,cover,toDoItem)
+        handleEditDiv(todo,mainDiv,cover,toDoItem,project)
         cover.addEventListener('click',()=>{
             
             document.body.removeChild(cover)
@@ -190,6 +217,8 @@ function toDoItemFunctionality(project,toDoContainer,addAToDo,todo){
     })
     deleteDiv.addEventListener('click',()=>{
         project.removeAToDo(todo)
+
+        mutateLocalStorage(project)
         toDoContainer.removeChild(toDoItem)
     })
 
@@ -231,9 +260,9 @@ function handleMainDiv(mainDiv,cover,project,addAToDo,toDoContainer){
         let chosenPriority = mainDiv.querySelector('.priorityDiv label input[type="radio"]:checked')
 
 
-        //TODO add date
-        console.log(chosenDate.value)
+        
         let todo = toDo.createATodo(inputTitle.value , description.value, new Date(chosenDate.value) , chosenPriority.value)
+        
         
         document.body.removeChild(cover)
         document.body.removeChild(mainDiv)
@@ -242,11 +271,12 @@ function handleMainDiv(mainDiv,cover,project,addAToDo,toDoContainer){
     })
 }
 
-function handleEditDiv(todo,mainDiv,cover,toDoItem){
+function handleEditDiv(todo,mainDiv,cover,toDoItem,project){
     let title = mainDiv.querySelector('h1')
     title.textContent = 'Setting new goals!'
     title.classList.add('title')
 
+    
     let titleInput = mainDiv.querySelector('input#title')
     titleInput.value = todo.getTitle()
 
@@ -297,9 +327,12 @@ function handleEditDiv(todo,mainDiv,cover,toDoItem){
         document.body.removeChild(cover)
         document.body.removeChild(mainDiv)
 
+
         editedName.textContent = titleInput.value
         toDoItem.className = `todo-item ${todo.getPriority()}-p`
         dueDateDiv.textContent = `finish in ${formatDistance(todo.getDueDate(), new Date())}`
+
+        mutateLocalStorage(project)
 
 
     })
@@ -331,5 +364,16 @@ function handleInfoDiv(todo,mainDiv,cover){
 
 }
 
+function mutateLocalStorage(project){
+    
+    let projectInLocalStorage = JSON.parse(localStorage.getItem('projects'))
+    let index = projectInLocalStorage.findIndex(child =>
+    {
+        return  child.number == project.number
+            
+    })
+    projectInLocalStorage[index] = project
+    localStorage.setItem('projects',JSON.stringify(projectInLocalStorage))
+}
 loadDefault()
 

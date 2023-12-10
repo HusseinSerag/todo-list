@@ -15,6 +15,16 @@ const Setter = {
     }
 }
 
+const identifier = {
+     numberOfObject:0,
+     increase:function(){
+        this.numberOfObject++;
+        console.log(this.numberOfObject)
+     },
+     getIncrease:function(){
+        return this.numberOfObject
+     }
+}
 const getList = {
     getAllToDo: function(){
         return this.toDoList
@@ -33,10 +43,16 @@ const remover = {
         this.getAllToDo().splice(index,1)
     }
 }
+export let prot = Object.assign({},Getter , Setter , getList , addToList,remover,identifier)
 export function createProject(name){
-    let state = {
-        projectName:name,
-        toDoList:[]
-    }
-    return Object.assign(state, Getter , Setter , getList , addToList,remover)
+    let project = Object.create(prot)
+    project.projectName = name
+    project.toDoList = []
+    
+    prot.increase()
+    
+    project.number = prot.getIncrease()
+    
+   
+    return project
 }

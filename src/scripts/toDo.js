@@ -29,11 +29,12 @@ const setter = {
     }
 }
 
-
+export let prot = Object.assign(getter,setter)
 export function createATodo(title,description,dueDate,priority,completed=0){
         
-    let state =  {title,description,dueDate,priority,completed}
-
-    return Object.assign(state , getter,setter)
+    let state =  Object.create(prot)
+    Object.assign(state,{title,description,dueDate,priority,completed})
+    console.log(state)
+    return state
 }
 
