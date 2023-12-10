@@ -122,12 +122,17 @@ function sideBarFunctionality(sideBarItem,project,projectContainer){
         main.appendChild(projectContainer)
     })
 
+    let welcomeText = document.querySelector('.welcome-text')
     img.addEventListener('click',()=>{
        let index = projects.indexOf(project)
        projects.splice(index,1)
        sidebar.removeChild(sideBarItem)
        if(main.hasChildNodes())
-            main.removeChild(projectContainer)
+            if(main.contains(projectContainer))
+                main.removeChild(projectContainer)
+        if(!main.hasChildNodes()){
+            main.appendChild(welcomeText)
+        }
       
     })
 }
@@ -218,8 +223,10 @@ function toDoItemFunctionality(project,toDoContainer,addAToDo,todo,number=true){
     deleteDiv.addEventListener('click',()=>{
         project.removeAToDo(todo)
 
-        mutateLocalStorage(project)
+        
         toDoContainer.removeChild(toDoItem)
+        console.log(project.getAllToDo())
+        mutateLocalStorage(project)
     })
 
     name.addEventListener('click',()=>{

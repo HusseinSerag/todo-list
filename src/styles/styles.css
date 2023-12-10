@@ -279,6 +279,10 @@ input[type="radio"]{
     font-size: min(1rem,8px + 1vw);
    }
 
+   .welcome-text{
+    font-family: aoboshi;
+    text-align: center;
+   }
 
    @media only screen and (max-width:425px){
     
@@ -286,7 +290,15 @@ input[type="radio"]{
         
         grid-template-rows:1fr 1fr ;
         grid-template-columns: unset;
+        min-height: unset;
         
         
     }
+    .sidebar{
+        padding:10px;
+    }
+    .main{
+        min-height: unset;
+    }
    }
+   

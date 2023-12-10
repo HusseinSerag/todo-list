@@ -40,6 +40,7 @@ const addToList = {
 const remover = {
     removeAToDo:function(toDo){
         let index =  this.getAllToDo().indexOf(toDo)
+        console.log(index)
         this.getAllToDo().splice(index,1)
     }
 }
